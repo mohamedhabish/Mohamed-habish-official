@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohamed Habish Official | Pi Music Network</title>
     
+    <!-- استدعاء مكتبة Pi Network SDK الرسمية لتوافق التطبيق مع متصفح Pi -->
     <script src="https://sdk.minepi.com/pi-dist.js"></script>
     
     <style>
@@ -49,7 +50,6 @@
             margin: 0 auto 15px;
         }
 
-        /* دمج رابط الـ CID المرفق للوجو الفنان محمد حبيش */
         .avatar {
             width: 100%;
             height: 100%;
@@ -85,7 +85,7 @@
             margin-bottom: 20px;
         }
 
-        /* مشغل الموسيقى الحقيقي */
+        /* مشغل الموسيقى */
         .music-player {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
@@ -153,11 +153,12 @@
         }
 
         .btn-play svg {
-            width: 24 height: 24;
+            width: 24px;
+            height: 24px;
             fill: #000000;
         }
 
-        /* قسم الدعم والتبرعات المستوفى للشروط */
+        /* قسم الدعم والتبرعات */
         .donation-section {
             background: rgba(255, 204, 0, 0.03);
             border: 1px dashed rgba(255, 204, 0, 0.25);
@@ -263,7 +264,8 @@
                 <p class="track-status" id="player-status">جاهز للتشغيل</p>
             </div>
             
-            <audio id="audio-track" src="https://www.youtube.com/watch?v=sctG-RPE61w"></audio>
+            <!-- تم تعديل الرابط مؤقتاً لملف mp3 حقيقي ليعمل الصوت مباشرة على خوادم الاستضافة، يمكنك وضع رابط ملفك هنا لاحقاً -->
+            <audio id="audio-track" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
             <div class="progress-bar" id="progress-container">
                 <div class="progress" id="track-progress"></div>
@@ -291,19 +293,21 @@
             </button>
         </div>
 
-        <footer>تطبيق موثق لبيئة التطوير وعنظومة Pi Network</footer>
+        <footer>تطبيق موثق لبيئة التطوير ومنظومة Pi Network</footer>
     </div>
 
     <div class="toast" id="toast-msg">تم نسخ عنوان المحفظة بنجاح!</div>
 
     <script>
-        // 1. كود تهيئة الـ SDK الخاص بـ Pi Network طبقاً لتعليمات فريق التطوير
+        // 1. كود تهيئة الـ SDK الخاص بـ Pi Network
         try {
             const Pi = window.Pi;
-            Pi.init({ version: "2.0" });
-            console.log("تم تفعيل وتجهيز Pi SDK بنجاح داخل التطبيق.");
+            if (Pi) {
+                Pi.init({ version: "2.0" });
+                console.log("تم تفعيل وتجهيز Pi SDK بنجاح داخل التطبيق.");
+            }
         } catch (e) {
-            console.warn("تنبيه: تشغيل الكود خارج متصفح Pi Browser - تم تفعيل وضع المحاكاة الخارجي.");
+            console.warn("تنبيه: تشغيل الكود خارج متصفح Pi Browser.");
         }
 
         // 2. كود مشغل الموسيقى والتحكم الصوتي الفعلي
@@ -312,18 +316,17 @@
         const playIcon = document.getElementById('play-icon');
         const playerStatus = document.getElementById('player-status');
         const trackProgress = document.getElementById('track-progress');
-        const progressContainer = document.getElementById('progress-container');
 
         playBtn.addEventListener('click', () => {
-            // ملاحظة: روابط يوتيوب المباشرة تحتاج لتضمين داخلي، الكود مهيأ هنا للتشغيل الفوري للملف الصوتي المباشر بمجرد وضعه بالسيرفر
             if (audio.paused) {
-                audio.play().catch(() => {
-                    // تشغيل محاكاة صوتية احترافية في حال تم فتح الرابط الخارجي المباشر لقيود المتصفح العادي
+                audio.play().then(() => {
+                    playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    playerStatus.innerText = "جاري الاستماع الآن...";
+                    playerStatus.style.color = "#00e676";
+                }).catch(() => {
+                    // حل احتياطي في حال تم حظر التشغيل التلقائي من قبل المتصفح الخارجي
                     simulatePlayback();
                 });
-                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-                playerStatus.innerText = "جاري الاستماع إلى: اربي كلاب";
-                playerStatus.style.color = "#00e676";
             } else {
                 audio.pause();
                 playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
@@ -332,26 +335,30 @@
             }
         });
 
-        // تحديث شريط التقدم الفعلي للأغنية
+        // تحديث شريط التقدم الفعلي للأغنية عند تشغيلها من الاستضافة
         audio.addEventListener('timeupdate', () => {
-            const progressPercent = (audio.currentTime / audio.duration) * 100;
-            trackProgress.style.width = `${progressPercent}%`;
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                trackProgress.style.width = `${progressPercent}%`;
+            }
         });
 
         function simulatePlayback() {
+            playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            playerStatus.innerText = "جاري تشغيل المعاينة الرسمية...";
+            playerStatus.style.color = "#00e676";
             let width = 0;
-            playerStatus.innerText = "جاري تشغيل المعاينة الرسمية للأغنية...";
             const interval = setInterval(() => {
-                if (playIcon.innerHTML.includes('M8 5v14l11-7z')) { 
+                if (audio.paused && !audio.currentTime) { 
                     clearInterval(interval); 
                     return; 
                 }
                 width = width >= 100 ? 0 : width + 1;
                 trackProgress.style.width = width + '%';
-            }, 1000);
+            }, 500);
         }
 
-        // 3. آلية نسخ عنوان المحفظة الآمنة والمتوافقة مع WebView الخاص بـ Pi Browser
+        // 3. آلية نسخ عنوان المحفظة
         function copyWalletAddress() {
             const walletText = document.getElementById('wallet-address').innerText;
             
