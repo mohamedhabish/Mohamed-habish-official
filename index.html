@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohamed Habish Official | Pi Music Network</title>
-    
-    <!-- Pi Network SDK -->
-    <script src="https://sdk.minepi.com/pi-dist.js"></script>
-    
-    <!-- YouTube IFrame Player API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <title>Mohamed Habish Official</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap');
@@ -70,15 +64,7 @@
         .subtitle {
             font-size: 14px;
             color: #a09cb0;
-            margin-bottom: 5px;
-        }
-
-        .welcome-user {
-            font-size: 13px;
-            color: #ffcc00;
             margin-bottom: 0;
-            font-weight: bold;
-            min-height: 20px;
         }
 
         /* مشغل الموسيقى */
@@ -104,7 +90,7 @@
             font-size: 13px;
             color: #79758f;
             margin-top: 6px;
-            transition: color 0.3s;
+            transition: color 0.2s;
         }
 
         .progress-bar {
@@ -156,18 +142,6 @@
             fill: #000000;
         }
 
-        /* حاوية يوتيوب المخفية بشكل آمن */
-        .youtube-hidden {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
         footer {
             margin-top: 30px;
             font-size: 11px;
@@ -188,162 +162,88 @@
             </div>
             <h1>Mohamed Habish</h1>
             <p class="subtitle">الفنان محمد حبيش - الصفحة الرسمية</p>
-            <p class="welcome-user" id="user-display">جاري الاتصال بـ Pi Network...</p>
         </div>
 
         <div class="music-player">
             <div class="track-info">
                 <p class="track-title">أغنية: اربي كلاب (Arby Klab)</p>
-                <p class="track-status" id="player-status">جاري تحميل المشغل...</p>
+                <p class="track-status" id="player-status">جاهز للاستماع الفوري</p>
             </div>
             
-            <!-- تم استبدال الـ iframe بـ div مخصص لـ YouTube API -->
-            <div class="youtube-hidden">
-                <div id="yt-player"></div>
-            </div>
+            <!-- عنصر تشغيل الصوت المباشر (يمكنك تغيير الرابط هنا بملف MP3 الخاص بك) -->
+            <audio id="audio-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="metadata"></audio>
 
             <div class="progress-bar" id="progress-container">
                 <div class="progress" id="track-progress"></div>
             </div>
             
             <div class="player-controls">
-                <button class="btn-play" id="play-btn" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <button class="btn-play" id="play-btn">
                     <svg viewBox="0 0 24 24" id="play-icon"><path d="M8 5v14l11-7z"/></svg>
                 </button>
             </div>
         </div>
 
-        <footer>تطبيق ثقافي تعريفي مجاني 100%<br>منظومة وعناصر Pi Network Ecosystem</footer>
+        <footer>تطبيق ثقافي تعريفي مجاني 100%</footer>
     </div>
 
     <script>
-        // --- 1. تهيئة وتكامل Pi Network SDK ---
-        const userDisplay = document.getElementById('user-display');
-        
-        try {
-            const Pi = window.Pi;
-            if (Pi) {
-                Pi.init({ version: "2.0" });
-                console.log("Pi SDK Initialized.");
-                
-                // مصادقة المستخدم والترحيب به تلقائياً داخل متصفح Pi
-                Pi.authenticate(['username'], onIncompletePaymentFound)
-                  .then(function(auth) {
-                      userDisplay.innerText = `مرحباً، Pioneer @${auth.user.username}`;
-                  }).catch(function(error) {
-                      console.error(error);
-                      userDisplay.innerText = "جاهز للمنصة البيئية";
-                  });
-            } else {
-                userDisplay.innerText = "تم التشغيل كصفحة ويب مستقلة";
-            }
-        } catch (e) {
-            console.warn("تنبيه: تشغيل البيئة خارج متصفح Pi Browser.");
-            userDisplay.innerText = "تم التشغيل خارج متصفح Pi";
-        }
-
-        function onIncompletePaymentFound(payment) {
-            // دالة إلزامية من SDK لتهيئة المدفوعات غير المكتملة إن وجدت
-            console.log("No incomplete payments found", payment);
-        }
-
-
-        // --- 2. إدارة مشغل YouTube والمزامنة الحقيقية ---
-        let player;
-        let progressInterval;
+        const audio = document.getElementById('audio-player');
         const playBtn = document.getElementById('play-btn');
         const playIcon = document.getElementById('play-icon');
         const playerStatus = document.getElementById('player-status');
         const trackProgress = document.getElementById('track-progress');
         const progressContainer = document.getElementById('progress-container');
 
-        // يتم استدعاء هذه الدالة تلقائياً بواسطة مكتبة يوتيوب الرسمية عند تحميلها
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '1',
-                width: '1',
-                videoId: 'sctG-RPE61w', // معرف الأغنية الخاصة بك
-                playerVars: {
-                    'controls': 0,
-                    'rel': 0,
-                    'playsinline': 1,
-                    'enablejsapi': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        // عندما يصبح المشغل جاهزاً للاستخدام
-        function onPlayerReady(event) {
-            playBtn.disabled = false;
-            playBtn.style.opacity = "1";
-            playBtn.style.cursor = "pointer";
-            playerStatus.innerText = "جاهز للاستماع الفوري";
-        }
-
-        // مراقبة حالة المشغل وتحديث الواجهة والتقدم الحقيقي
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-                playerStatus.innerText = "جاري الاستماع الآن...";
-                playerStatus.style.color = "#00e676";
-                startProgressTracker();
-            } else {
-                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                if (event.data == YT.PlayerState.PAUSED) {
-                    playerStatus.innerText = "تم الإيقاف مؤقتاً";
-                    playerStatus.style.color = "#79758f";
-                } else if (event.data == YT.PlayerState.ENDED) {
-                    playerStatus.innerText = "انتهت الأغنية. أعد التشغيل";
-                    playerStatus.style.color = "#ffcc00";
-                    trackProgress.style.width = '0%';
-                }
-                clearInterval(progressInterval);
-            }
-        }
-
-        // تشغيل وإيقاف الصوت عند الضغط على الزر الرئيسي
+        // التبديل بين التشغيل والإيقاف المؤقت
         playBtn.addEventListener('click', () => {
-            if (player && typeof player.getPlayerState === 'function') {
-                const state = player.getPlayerState();
-                if (state !== YT.PlayerState.PLAYING) {
-                    player.playVideo();
-                } else {
-                    player.pauseVideo();
-                }
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
             }
         });
 
-        // تتبع الوقت الحقيقي للفيديو ومزامنته مع الشريط
-        function startProgressTracker() {
-            clearInterval(progressInterval);
-            progressInterval = setInterval(() => {
-                if (player && typeof player.getCurrentTime === 'function') {
-                    const currentTime = player.getCurrentTime();
-                    const duration = player.getDuration();
-                    if (duration > 0) {
-                        const percentage = (currentTime / duration) * 100;
-                        trackProgress.style.width = percentage + '%';
-                    }
-                }
-            }, 200); // تحديث كل 200 مللي ثانية للحصول على حركة سلسة جداً
-        }
+        // الأحداث المرتبطة بحالة التشغيل
+        audio.addEventListener('play', () => {
+            playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            playerStatus.innerText = "جاري الاستماع الآن...";
+            playerStatus.style.color = "#00e676";
+        });
 
-        // تمكين تقديم وتأخير الأغنية عند الضغط على أي مكان في الشريط
+        audio.addEventListener('pause', () => {
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            playerStatus.innerText = "تم الإيقاف مؤقتاً";
+            playerStatus.style.color = "#79758f";
+        });
+
+        audio.addEventListener('ended', () => {
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            playerStatus.innerText = "انتهت الأغنية. أعد التشغيل";
+            playerStatus.style.color = "#ffcc00";
+            trackProgress.style.width = '0%';
+        });
+
+        // تحديث شريط التقدم تلقائياً مع حركة الصوت الفعلي
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            const duration = audio.duration;
+            if (duration > 0) {
+                const percentage = (currentTime / duration) * 100;
+                trackProgress.style.width = percentage + '%';
+            }
+        });
+
+        // التحكم في تقديم وتأخير الأغنية عند النقر على شريط التقدم
         progressContainer.addEventListener('click', (e) => {
-            if (player && typeof player.getDuration === 'function') {
-                const rect = progressContainer.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const width = rect.width;
-                const percentage = clickX / width;
-                const duration = player.getDuration();
-                
-                if (duration > 0) {
-                    player.seekTo(duration * percentage, true);
-                }
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percentage = clickX / width;
+            const duration = audio.duration;
+            
+            if (duration > 0) {
+                audio.currentTime = duration * percentage;
             }
         });
     </script>
