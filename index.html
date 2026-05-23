@@ -30,14 +30,14 @@
             width: 100%;
             max-width: 450px;
             border-radius: 24px;
-            padding: 35px 30px;
+            padding: 40px 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             border: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
         }
 
         .artist-profile {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .music-icon-container {
@@ -64,86 +64,56 @@
         .subtitle {
             font-size: 14px;
             color: #a09cb0;
-            margin-bottom: 0;
         }
 
-        /* مشغل الموسيقى */
-        .music-player {
+        /* حيز عرض العمل الفني والزر */
+        .track-section {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 20px;
-            padding: 25px 20px;
+            padding: 30px 20px;
             margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .track-info {
-            margin-bottom: 20px;
         }
 
         .track-title {
             font-size: 18px;
             font-weight: bold;
             color: #ffcc00;
+            margin-bottom: 25px;
         }
 
-        .track-status {
-            font-size: 13px;
-            color: #79758f;
-            margin-top: 6px;
-            transition: color 0.2s;
-        }
-
-        .progress-bar {
+        /* زر التوجيه إلى يوتيوب */
+        .btn-youtube {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #ff0000; /* لون يوتيوب الرسمي */
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
             width: 100%;
-            height: 6px;
-            background: #25213b;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            position: relative;
         }
 
-        .progress {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff9900, #ffcc00);
-            border-radius: 3px;
-            transition: width 0.1s linear;
+        .btn-youtube:hover {
+            transform: scale(1.02);
+            background: #e60000;
+            box-shadow: 0 7px 20px rgba(255, 0, 0, 0.4);
         }
 
-        .player-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-play {
-            background: #ffcc00;
-            border: none;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(255, 204, 0, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .btn-play:hover {
-            transform: scale(1.05);
-            background: #ffe066;
-        }
-
-        .btn-play svg {
-            width: 26px;
-            height: 26px;
-            fill: #000000;
+        .btn-youtube svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
         }
 
         footer {
-            margin-top: 30px;
+            margin-top: 35px;
             font-size: 11px;
             color: #4a475a;
             line-height: 1.5;
@@ -164,88 +134,20 @@
             <p class="subtitle">الفنان محمد حبيش - الصفحة الرسمية</p>
         </div>
 
-        <div class="music-player">
-            <div class="track-info">
-                <p class="track-title">أغنية: اربي كلاب (Arby Klab)</p>
-                <p class="track-status" id="player-status">جاهز للاستماع الفوري</p>
-            </div>
+        <div class="track-section">
+            <p class="track-title">أغنية: اربي كلاب (Arby Klab)</p>
             
-            <!-- عنصر تشغيل الصوت المباشر (يمكنك تغيير الرابط هنا بملف MP3 الخاص بك) -->
-            <audio id="audio-player" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="metadata"></audio>
-
-            <div class="progress-bar" id="progress-container">
-                <div class="progress" id="track-progress"></div>
-            </div>
-            
-            <div class="player-controls">
-                <button class="btn-play" id="play-btn">
-                    <svg viewBox="0 0 24 24" id="play-icon"><path d="M8 5v14l11-7z"/></svg>
-                </button>
-            </div>
+            <!-- زر الانتقال المباشر إلى رابط الأغنية المذكور -->
+            <a href="https://youtu.be/sctG-RPE61w?si=yWI-Q_cVvZh8JLHT" target="_blank" class="btn-youtube">
+                <svg viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                اضغط هنا للاستماع عبر يوتيوب
+            </a>
         </div>
 
         <footer>تطبيق ثقافي تعريفي مجاني 100%</footer>
     </div>
 
-    <script>
-        const audio = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        const playIcon = document.getElementById('play-icon');
-        const playerStatus = document.getElementById('player-status');
-        const trackProgress = document.getElementById('track-progress');
-        const progressContainer = document.getElementById('progress-container');
-
-        // التبديل بين التشغيل والإيقاف المؤقت
-        playBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
-        });
-
-        // الأحداث المرتبطة بحالة التشغيل
-        audio.addEventListener('play', () => {
-            playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-            playerStatus.innerText = "جاري الاستماع الآن...";
-            playerStatus.style.color = "#00e676";
-        });
-
-        audio.addEventListener('pause', () => {
-            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-            playerStatus.innerText = "تم الإيقاف مؤقتاً";
-            playerStatus.style.color = "#79758f";
-        });
-
-        audio.addEventListener('ended', () => {
-            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-            playerStatus.innerText = "انتهت الأغنية. أعد التشغيل";
-            playerStatus.style.color = "#ffcc00";
-            trackProgress.style.width = '0%';
-        });
-
-        // تحديث شريط التقدم تلقائياً مع حركة الصوت الفعلي
-        audio.addEventListener('timeupdate', () => {
-            const currentTime = audio.currentTime;
-            const duration = audio.duration;
-            if (duration > 0) {
-                const percentage = (currentTime / duration) * 100;
-                trackProgress.style.width = percentage + '%';
-            }
-        });
-
-        // التحكم في تقديم وتأخير الأغنية عند النقر على شريط التقدم
-        progressContainer.addEventListener('click', (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = rect.width;
-            const percentage = clickX / width;
-            const duration = audio.duration;
-            
-            if (duration > 0) {
-                audio.currentTime = duration * percentage;
-            }
-        });
-    </script>
 </body>
 </html>
